@@ -1,0 +1,113 @@
+<!-- <div class="relative z-0">
+    @if(element === 'input') {
+    <input [formControl]="control" [type]=" typeInput||( flag?'password':'text')" [id]="idInput" class="main-input peer"
+        [class]="{'border-green-700':control?.valid,'border-red-700':control?.invalid && control?.touched}"
+        [placeholder]="placeholder" />
+    }
+    @else if(element === 'text')
+    {
+    <textarea [formControl]="control" [id]="idInput" class="main-input peer"
+        [class]="{'border-green-700':control?.valid,'border-red-700':control?.invalid && control?.touched}"
+        placeholder=" "></textarea>
+    }
+
+    <label [for]="idInput" class="main-label">{{labelInput}}</label>
+
+    @if(idInput==='password' || idInput==='rePassword' ){
+    <span (click)="flag = !flag" class="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-500">
+        <i class="fas" [class.fa-eye]="flag" [class.fa-eye-slash]="!flag"></i>
+    </span>
+    }
+
+    @if(control?.errors && control?.touched){
+    <div class="flex p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+        role="alert">
+        <span class="sr-only">Danger</span>
+        <div>
+            <span class="font-medium">Ensure that these requirements are met:</span>
+            <ul class="mt-1.5 list-disc list-inside">
+                @if(control?.hasError('required')){
+                <li>input is required</li>
+                }
+                @if(control?.hasError('minlength')){
+                <li>input min length is 3 charachters</li>
+                }
+                @if(control?.hasError('maxlength')){
+                <li>input max length is 20 charachters</li>
+                }
+                @if(control?.hasError('email')){
+                <li>please enter a valid email address</li>
+                }
+                @if(control?.hasError('pattern')){
+                <li><ng-content></ng-content></li>
+                }
+                @if(control?.hasError('mismatch')){
+                <li>custom field must match a pattern</li>
+                }
+            </ul>
+        </div>
+    </div>
+    }
+
+</div> -->
+<div class="w-full">
+    @if(element === 'input') {
+    <div class="relative w-full">
+        <input 
+            [formControl]="control" 
+            [type]=" typeInput || (flag ? 'password' : 'text')" 
+            [id]="idInput" 
+            class="w-full px-4 py-2 pr-10 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+            [class.border-green-600]="control?.valid"
+            [class.border-red-600]="control?.invalid && control?.touched" 
+            [placeholder]="placeholder" />
+
+        <!-- Password Toggle -->
+        @if(idInput==='password' || idInput==='rePassword') {
+        <span 
+            (click)="flag = !flag" 
+            class="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-500">
+            <i class="fas" [class.fa-eye]="flag" [class.fa-eye-slash]="!flag"></i>
+        </span>
+        }
+    </div>
+    }
+    @else if(element === 'text') {
+    <textarea 
+        [formControl]="control" 
+        [id]="idInput" 
+        class="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400"
+        [class.border-green-600]="control?.valid"
+        [class.border-red-600]="control?.invalid && control?.touched" 
+        [placeholder]="placeholder"></textarea>
+    }
+
+    <!-- Validation Errors -->
+    @if(control?.errors && control?.touched){
+    <div class="flex p-3 mt-2 text-sm text-red-800 rounded-md bg-red-100 mb-1.5" role="alert">
+        <div>
+            <span class="font-medium">Ensure that these requirements are met:</span>
+            <ul class="mt-1 list-disc list-inside space-y-1">
+                @if(control?.hasError('required')) {
+                <li>Input is required</li>
+                }
+                @if(control?.hasError('minlength')) {
+                <li>Minimum length is 3 characters</li>
+                }
+                @if(control?.hasError('maxlength')) {
+                <li>Maximum length is 20 characters</li>
+                }
+                @if(control?.hasError('email')) {
+                <li>Please enter a valid email address</li>
+                }
+                @if(control?.hasError('pattern')) {
+                <li><ng-content></ng-content></li>
+                }
+                @if(control?.hasError('mismatch')) {
+                <li>Custom field must match a pattern</li>
+                }
+            </ul>
+        </div>
+    </div>
+    }
+</div>

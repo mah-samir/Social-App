@@ -1,0 +1,202 @@
+<section
+    class="bg-white mx-auto rounded-xl p-0 md:w-[40%] mb-4 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+    <!-- Post Header -->
+    <div class="flex justify-between items-center px-5 pt-4 pb-3">
+        <div class="flex items-center space-x-3">
+            <div class="relative">
+                <img class="w-12 h-12 rounded-full object-cover ring-2 ring-gray-100" [src]="post().user.photo"
+                    [alt]="post().user.name">
+                <!-- Online status indicator (optional) -->
+                <span
+                    class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-white rounded-full"></span>
+            </div>
+            <div>
+                <h3 class="text-base font-semibold text-gray-900 hover:text-blue-600 cursor-pointer transition-colors">
+                    {{post().user.name}}
+                </h3>
+                <div class="flex items-center gap-1.5">
+                    <span class="text-xs text-gray-500">{{post().createdAt | date:'short'}}</span>
+                    <span class="text-gray-400">•</span>
+                    <svg class="w-3 h-3 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dropdown -->
+        <div class="relative">
+            <button (click)="toggleDropdown()"
+                class="inline-flex items-center p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all duration-200"
+                type="button">
+                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
+                    <path
+                        d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
+                </svg>
+            </button>
+
+            @if (isDropdownOpen()) {
+            <div
+                class="absolute right-0 z-20 mt-2 bg-white rounded-xl shadow-xl w-48 border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                <ul class="py-1">
+                    <li>
+                        <button (click)="openEditModal()"
+                            class="flex items-center gap-3 w-full text-left px-4 py-2.5 hover:bg-gray-50 text-gray-700 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                            <span class="text-sm font-medium">Edit Post</span>
+                        </button>
+                    </li>
+                    <li class="border-t border-gray-100">
+                        <button (click)="deletePost()"
+                            class="flex items-center gap-3 w-full text-left px-4 py-2.5 hover:bg-red-50 text-red-600 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            <span class="text-sm font-medium">Delete Post</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            }
+        </div>
+    </div>
+
+    <!-- Post Body -->
+    <div class="px-5 pb-3">
+        <p class="text-gray-800 text-[15px] leading-relaxed whitespace-pre-wrap">{{post().body}}</p>
+    </div>
+
+    <!-- Post Image -->
+    @if (post().image) {
+    <div class="w-full max-h-[500px] overflow-hidden bg-gray-100">
+        <img class="w-full h-full object-contain" [src]="post().image" alt="Post image">
+    </div>
+    }
+
+    <!-- Post Stats (Likes, Comments Count) -->
+    <div class="px-5 py-3 flex items-center justify-between text-sm text-gray-500">
+        <div class="flex items-center gap-2">
+            <div class="flex -space-x-1">
+                <span
+                    class="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs border-2 border-white">👍</span>
+                <span
+                    class="w-5 h-5 rounded-full bg-red-500 flex items-center justify-center text-white text-xs border-2 border-white">❤️</span>
+            </div>
+            <span class="hover:underline cursor-pointer">24</span>
+        </div>
+        <div class="flex items-center gap-3">
+            <span class="hover:underline cursor-pointer">{{ post().comments.length }} comments</span>
+            <span class="hover:underline cursor-pointer">12 shares</span>
+        </div>
+    </div>
+
+    <!-- Post Actions -->
+    <div class="border-t border-gray-200 px-3 py-1">
+        <div class="flex justify-around items-center">
+            <button (click)="likePost()"
+                class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg hover:bg-gray-50 transition-all duration-200 group"
+                [class.text-blue-600]="liked()" [class.text-gray-600]="!liked()">
+                <svg class="w-5 h-5 transition-transform group-hover:scale-110" [class.fill-current]="liked()"
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                </svg>
+                <span class="text-sm font-medium">Like</span>
+            </button>
+
+            <button (click)="toggleComments()"
+                class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg hover:bg-gray-50 transition-all duration-200 text-gray-600 group">
+                <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+                <span class="text-sm font-medium">Comment</span>
+            </button>
+
+            <button (click)="sharePost()"
+                class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg hover:bg-gray-50 transition-all duration-200 text-gray-600 group">
+                <svg class="w-5 h-5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                </svg>
+                <span class="text-sm font-medium">Share</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Comments Section -->
+    @if (showComments()) {
+    <div class="border-t border-gray-200 bg-gray-50">
+        <!-- Add Comment Form -->
+        <div class="px-5 pt-4 pb-3">
+            @if (errorMessage()) {
+            <div class="mb-3 p-3 text-sm text-red-700 rounded-lg bg-red-50 border border-red-100 flex items-start gap-2"
+                role="alert">
+                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                        clip-rule="evenodd" />
+                </svg>
+                <span>{{ errorMessage() }}</span>
+            </div>
+            }
+
+            <form (submit)="$event.preventDefault(); submitComment()">
+                <div class="flex items-start gap-3">
+                    <img class="w-9 h-9 rounded-full object-cover ring-2 ring-white shadow-sm" [src]="post().user.photo"
+                        alt="Your profile">
+
+                    <div class="flex-1">
+                        <div class="relative">
+                            <textarea [(ngModel)]="commentContent" name="comment" rows="1"
+                                class="block w-full px-4 py-2.5 text-sm text-gray-900 bg-white rounded-full border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all duration-200 hover:border-gray-400"
+                                placeholder="Write a comment..." [disabled]="isSubmitting()"
+                                style="min-height: 40px; max-height: 120px;"></textarea>
+                        </div>
+
+                        @if (commentContent().trim()) {
+                        <div class="flex justify-end mt-2 gap-2">
+                            <button type="button" (click)="commentContent.set('')"
+                                class="px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-200 rounded-full transition-colors">
+                                Cancel
+                            </button>
+                            <button type="submit" [disabled]="isSubmitting() || !commentContent().trim()"
+                                class="px-5 py-1.5 text-sm font-semibold text-white bg-blue-600 rounded-full hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow">
+                                {{ isSubmitting() ? 'Posting...' : 'Post' }}
+                            </button>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Comments List -->
+        <div class="px-5 pb-4">
+            @for (comment of post().comments; track comment._id) {
+            <app-s-comment [Comment]="comment" (commentUpdated)="onCommentUpdated($event)"
+                (commentDeleted)="onCommentDeleted($event)">
+            </app-s-comment>
+            }
+
+            @if (post().comments.length === 0) {
+            <div class="text-center py-8">
+                <svg class="w-16 h-16 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+                <p class="text-gray-500 text-sm font-medium">No comments yet</p>
+                <p class="text-gray-400 text-xs mt-1">Be the first to share your thoughts!</p>
+            </div>
+            }
+        </div>
+    </div>
+    }
+</section>
