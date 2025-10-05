@@ -3,7 +3,7 @@
   "outputDirectory": "dist/socialApp/browser",
   "devCommand": "ng serve",
   "installCommand": "npm install",
-  "framework": "Angular",
+  "framework": "angular",
   "rewrites": [
     {
       "source": "/(.*)",
